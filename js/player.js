@@ -129,6 +129,7 @@ function matchDetailSubmit() {
     var teamBName = $('#matchTeamBName').val();
     var scoreA = parseInt($('#matchScoreA').val());
     var scoreB = parseInt($('#matchScoreB').val());
+    var hint="";
     if (!scoreA) scoreA = 0;
     if (!scoreB) scoreB = 0;
 
@@ -156,6 +157,7 @@ function matchDetailSubmit() {
         goalCount: 2,
         yellowCard: 0,
         redCard: 10,
+        hint:hint,
     };
     players.push(player);
 
