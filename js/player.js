@@ -123,13 +123,14 @@ function addMatchesToTable(data) {
 
 function matchDetailSubmit() {
 
-    var date = datetimepicker.datetimepicker('getDate');
+    var date = datetimepicker.datetimepicker('getDate').pattern("yyyy-MM-dd hh:mm:ss");
     var hint = $('#matchHint').val();
+    var matchProperty = 0;
     var teamAName = $('#matchTeamAName').val();
     var teamBName = $('#matchTeamBName').val();
     var scoreA = parseInt($('#matchScoreA').val());
     var scoreB = parseInt($('#matchScoreB').val());
-    var hint="";
+    var hint = "";
     if (!scoreA) scoreA = 0;
     if (!scoreB) scoreB = 0;
 
@@ -141,7 +142,7 @@ function matchDetailSubmit() {
 
     var goalAName = $('#matchTeamAScoreName').val();
 
-
+    var converDate = string2Date(date);
     var match = {};
     match.competitionId = competition.competitionId;
     match.teamAName = teamAName;
@@ -150,16 +151,29 @@ function matchDetailSubmit() {
     match.scoreB = scoreB;
     match.penaltyA = penaltyA;
     match.penaltyB = penaltyB;
+    match.date = date;
+    match.matchProperty = matchProperty;
+    match.hint = hint;
 
     var players = [];
     player = {
-        name: "测试名字",
+        name: "测试名字1",
         goalCount: 2,
         yellowCard: 0,
         redCard: 10,
-        hint:hint,
+        team: "测试",
+    };
+
+    player1 = {
+        name: "测试名字2",
+        goalCount: 2,
+        yellowCard: 1,
+        redCard: 0,
+        team: "测试",
     };
     players.push(player);
+    players.push(player1);
+
 
     var params = {
         match: match,
@@ -168,4 +182,61 @@ function matchDetailSubmit() {
 
     console.log(params);
 
+
+    callCloudFunction("hello", params, function(results) {
+        console.log(results);
+    });
+    callCloudFunction("updateMatchAndPlayerData", params, function(results) {
+        console.log(results);
+    });
+
+}
+
+
+
+/** * 对Date的扩展，将 Date 转化为指定格式的String * 月(M)、日(d)、12小时(h)、24小时(H)、分(m)、秒(s)、周(E)、季度(q)
+    可以用 1-2 个占位符 * 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字) * eg: * (new
+    Date()).pattern("yyyy-MM-dd hh:mm:ss.S")==> 2006-07-02 08:09:04.423      
+ * (new Date()).pattern("yyyy-MM-dd E HH:mm:ss") ==> 2009-03-10 二 20:09:04      
+ * (new Date()).pattern("yyyy-MM-dd EE hh:mm:ss") ==> 2009-03-10 周二 08:09:04      
+ * (new Date()).pattern("yyyy-MM-dd EEE hh:mm:ss") ==> 2009-03-10 星期二 08:09:04      
+ * (new Date()).pattern("yyyy-M-d h:m:s.S") ==> 2006-7-2 8:9:4.18      
+ */
+Date.prototype.pattern = function(fmt) {
+    var o = {
+        "M+": this.getMonth() + 1, //月份         
+        "d+": this.getDate(), //日         
+        "h+": this.getHours() % 12 == 0 ? 12 : this.getHours() % 12, //小时         
+        "H+": this.getHours(), //小时         
+        "m+": this.getMinutes(), //分         
+        "s+": this.getSeconds(), //秒         
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度         
+        "S": this.getMilliseconds() //毫秒         
+    };
+    var week = {
+        "0": "/u65e5",
+        "1": "/u4e00",
+        "2": "/u4e8c",
+        "3": "/u4e09",
+        "4": "/u56db",
+        "5": "/u4e94",
+        "6": "/u516d"
+    };
+    if (/(y+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    }
+    if (/(E+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, ((RegExp.$1.length > 1) ? (RegExp.$1.length > 2 ? "/u661f/u671f" : "/u5468") : "") + week[this.getDay() + ""]);
+    }
+    for (var k in o) {
+        if (new RegExp("(" + k + ")").test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        }
+    }
+    return fmt;
+}
+
+///    var s = "2005-12-15  09:41:30";
+function string2Date(formatString) {
+    return new Date(Date.parse(formatString.replace(/-/g, "/")));
 }
