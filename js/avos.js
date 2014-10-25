@@ -199,15 +199,18 @@ function callCloudFunction(functionName, params, callback) {
             "X-AVOSCloud-Application-Key": appKey,
             "Content-Type": "application/json",
         },
-        data: '{"match":{"competitionId":100,"teamAName":"测试A","teamBName":"测试B","scoreA":2,"scoreB":1,"penaltyA":0,"penaltyB":0,"date":"2014-10-24 03:16:14","matchProperty":0,"hint":""},"players":[{"name":"测试名字1","goalCount":2,"yellowCard":0,"redCard":10,"team":"测试"},{"name":"测试名字2","goalCount":2,"yellowCard":1,"redCard":0,"team":"测试"}]}',
+        data: JSON.stringify(params),
         success: function(data) {
             if (callback) {
-                console.log(results);
-                callback(results);
+                console.log(data.result);
+                callback(data.result);
             }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
             console.log(textStatus);
+            if (callback) {
+                callback("error");
+            }
         }
     });
 

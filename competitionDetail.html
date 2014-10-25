@@ -13,8 +13,10 @@
     <script src="js/jquery.dataTables.1.9.4.js"></script>
     <script src="js/dataTables.bootstrap.js"></script>
     <script src="js/bootstrap-datetimepicker.js"></script>
+    <script src="js/bPopup.0.10.0.js"></script>
     <script src="js/avos.js"></script>
-    <script src="js/player.js"></script>
+    <script src="js/competitionDetail.js"></script>
+
 
     <style>
     .floatLeft {
@@ -29,11 +31,17 @@
     <div class="tabbable">
         <!-- Only required for left/right tabs -->
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#playerTableTab" data-toggle="tab">球员列表</a>
+            <li class="active">
+                <a href="#playerTableTab" data-toggle="tab">球员列表</a>
             </li>
-            <li><a href="#matchTableTab" data-toggle="tab">比赛列表</a>
+            <li>
+                <a href="#teamTableTab" data-toggle="tab">球队列表</a>
             </li>
-            <li><a href="#addMatchTab" data-toggle="tab">添加比赛</a>
+            <li>
+                <a href="#matchTableTab" data-toggle="tab">比赛列表</a>
+            </li>
+            <li>
+                <a href="#addMatchTab" data-toggle="tab">添加比赛</a>
             </li>
         </ul>
         <div class="tab-content">
@@ -54,10 +62,34 @@
                 </div>
             </div>
 
+            <div class="tab-pane" id="teamTableTab">
+                <div class="container">
+                    <table class="table table-striped table-bordered table-hover datatable " id="teamTable">
+                        <thead>
+                            <tr>
+                                <th style="">队名</th>
+                                <th style="">小组获胜</th>
+                                <th style="">小组平局</th>
+                                <th style="">小组失利</th>
+                                <th style="">小组进球</th>
+                                <th style="">小组失球</th>
+                                <th style="">小组</th>
+                                <th style="">积分</th>
+                                <th style="">总获胜</th>
+                                <th style="">总失利</th>
+                                <th style="">总进球</th>
+                                <th style="">总失球</th>
+                                <th style="">排名</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
 
             <div class="tab-pane" id="matchTableTab">
                 <div class="container">
-                    <table class="table table-striped table-bordered table-hover datatable " id="matchTable">
+                    <table class="table table-striped table-bordered table-hover datatable" id="matchTable" style="">
                         <thead>
                             <tr>
                                 <th style="">赛事</th>
@@ -69,6 +101,7 @@
                                 <th style="">状态</th>
                                 <th style="">性质</th>
                                 <th style="">注释</th>
+                                <th style="">裁判表现</th>
                             </tr>
                         </thead>
                     </table>
@@ -112,14 +145,15 @@
 
                                 <div class="floatLeft">
                                     <select id="matchProperty">
-                                        <option>小组赛</option>
-                                        <option>1/32决赛</option>
-                                        <option>1/16决赛</option>
-                                        <option>1/8决赛</option>
-                                        <option>1/4决赛</option>
-                                        <option>半决赛</option>
-                                        <option>决赛</option>
-                                        <option>资格赛</option>
+                                        <option value="0">小组赛</option>
+                                        <option value="32">1/32决赛</option>
+                                        <option value="16">1/16决赛</option>
+                                        <option value="8">1/8决赛</option>
+                                        <option value="4">1/4决赛</option>
+                                        <option value="3">3、4名</option>
+                                        <option value="2">半决赛</option>
+                                        <option value="1">决赛</option>
+                                        <option value="100">资格赛</option>
                                     </select>
                                 </div>
                             </div>
@@ -143,19 +177,19 @@
                                 <div class="control-group info">
                                     <h4>进球</h4>
                                     <span class="help-inline">依次输入球员名字 以空格分离 如"XX XX"表示:XX球员在一场比赛中进了2个球</span>
-                                    <textarea id="matchTeamAScoreName" style="width:80%;" placeholder="可空"></textarea>
+                                    <textarea id="goalAPlayers" style="width:80%;" placeholder="可空"></textarea>
                                 </div>
 
                                 <div class="control-group warning">
                                     <h4>黄牌</h4>
                                     <span class="help-inline">依次输入球员名字 以空格分离 如"XX XX"表示:XX球员在一场比赛中领了2张黄牌</span>
-                                    <textarea id="matchTeamAYellowCardName" style="width:80%;" placeholder="可空"></textarea>
+                                    <textarea id="yellowCardAPlayers" style="width:80%;" placeholder="可空"></textarea>
                                 </div>
 
                                 <div class="control-group error">
                                     <h4>红牌</h4>
                                     <span class="help-inline">依次输入球员名字 以空格分离 如"XX XX"表示:XX球员在一场比赛中领了2张黄牌</span>
-                                    <textarea id="matchTeamARedCardName" style="width:80%;" placeholder="可空"></textarea>
+                                    <textarea id="redCardAPlayers" style="width:80%;" placeholder="可空"></textarea>
                                 </div>
                             </fieldset>
                         </div>
@@ -171,19 +205,19 @@
                                 <div class="control-group info">
                                     <h4>进球</h4>
                                     <span class="help-inline">依次输入球员名字 以空格分离 如"XX XX"表示:XX球员在一场比赛中进了2了球</span>
-                                    <textarea id="matchTeamBScoreName" style="width:80%;" placeholder="可空"></textarea>
+                                    <textarea id="goalBPlayers" style="width:80%;" placeholder="可空"></textarea>
                                 </div>
 
                                 <div class="control-group warning">
                                     <h4>黄牌</h4>
                                     <span class="help-inline">依次输入球员名字 以空格分离 如"XX XX"表示:XX球员在一场比赛中领了2张黄牌</span>
-                                    <textarea id="matchTeamBYellowCardName" style="width:80%;" placeholder="可空"></textarea>
+                                    <textarea id="yellowCardBPlayers" style="width:80%;" placeholder="可空"></textarea>
                                 </div>
 
                                 <div class="control-group error">
                                     <h4>红牌</h4>
                                     <span class="help-inline">依次输入球员名字 以空格分离 如"XX yy"表示:XX与yy球员在一场比赛中各领一张红牌</span>
-                                    <textarea id="matchTeamBRedCardName" style="width:80%;" placeholder="可空"></textarea>
+                                    <textarea id="redCardBPlayers" style="width:80%;" placeholder="可空"></textarea>
                                 </div>
                             </fieldset>
                         </div>
@@ -203,6 +237,13 @@
                 </div>
             </div>
         </div>
+    </div>
+
+
+    <div id="submitFinishHint" style="background-color:#fff; border-radius:15px;color:#000;display:none;padding:20px;min-width:450px;min-height:180px;">
+        <h3 id="submitFinishHintLabel" align="center" style="margin-top:20px; font-size:">
+            更新成功，请刷新网页更新数据
+        </h3>
     </div>
 
 </body>

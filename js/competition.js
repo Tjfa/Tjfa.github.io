@@ -60,7 +60,7 @@ function showEdit($obj) {
         $("#competitionTimeYear").val(time.substring(0, 4));
 
         var term = time.substring(4);
-        console.log(term);
+
         if (term == firstTerm) {
             $("#competitionTimeTerm").find("option:first").attr("selected", true);
         } else {
@@ -128,7 +128,7 @@ function addCompetitionsToTable(data) {
     oTable.find("a.showDetail").click(function(event) {
         var objectId = $(this).attr("objectId");
         getCompetitionByObjectId(objectId, function(data) {
-            window.location = "player.html?objectId=" + data.objectId;
+            window.location = "competitionDetail.html?objectId=" + data.objectId;
         });
 
     });
