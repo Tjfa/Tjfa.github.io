@@ -1,0 +1,251 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-responsiv.css">
+    <link rel="stylesheet" type="text/css" href="/css/dataTables.bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap_adapt.css">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-datetimepicker.css">
+
+    <script src="/js/jquery-1.11.0.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jquery.dataTables.1.9.4.js"></script>
+    <script src="/js/dataTables.bootstrap.js"></script>
+    <script src="/js/bootstrap-datetimepicker.js"></script>
+    <script src="/js/bPopup.0.10.0.js"></script>
+    <script src="/js/avos.js"></script>
+    <script src="/js/competitionDetail.js"></script>
+
+
+    <style>
+    .floatLeft {
+        width: 50%;
+        float: left;
+    }
+    </style>
+</head>
+
+<body>
+
+    <div class="tabbable">
+        <!-- Only required for left/right tabs -->
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#playerTableTab" data-toggle="tab">球员列表</a>
+            </li>
+            <li>
+                <a href="#teamTableTab" data-toggle="tab">球队列表</a>
+            </li>
+            <li>
+                <a href="#matchTableTab" data-toggle="tab">比赛列表</a>
+            </li>
+            <li>
+                <a href="#addMatchTab" data-toggle="tab">添加比赛</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="playerTableTab">
+                <div class="container">
+                    <table class="table table-striped table-bordered table-hover datatable" id="playerTable">
+                        <thead>
+                            <tr>
+                                <th style="">赛事</th>
+                                <th style="">姓名</th>
+                                <th style="">球队</th>
+                                <th style="">进球数</th>
+                                <th style="">黄牌</th>
+                                <th style="">红牌</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="teamTableTab">
+                <div class="container">
+                    <table class="table table-striped table-bordered table-hover datatable " id="teamTable">
+                        <thead>
+                            <tr>
+                                <th style="">队名</th>
+                                <th style="">小组获胜</th>
+                                <th style="">小组平局</th>
+                                <th style="">小组失利</th>
+                                <th style="">小组进球</th>
+                                <th style="">小组失球</th>
+                                <th style="">小组</th>
+                                <th style="">积分</th>
+                                <th style="">总获胜</th>
+                                <th style="">总失利</th>
+                                <th style="">总进球</th>
+                                <th style="">总失球</th>
+                                <th style="">排名</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="tab-pane" id="matchTableTab">
+                <div class="container">
+                    <table class="table table-striped table-bordered table-hover datatable" id="matchTable" style="">
+                        <thead>
+                            <tr>
+                                <th style="">赛事</th>
+                                <th style="">A队</th>
+                                <th style="">B队</th>
+                                <th style="">日期</th>
+                                <th style="">比分</th>
+                                <th style="">点球大战</th>
+                                <th style="">状态</th>
+                                <th style="">性质</th>
+                                <th style="">注释</th>
+                                <th style="">裁判表现</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="addMatchTab">
+                <div class="container">
+
+                    <div>
+                        <fieldset>
+                            <legend>比赛信息</legend>
+
+                            <div class="clearfix">
+                                <div class="floatLeft">
+                                    <label>比赛时间</label>
+                                    <div class="control-group">
+                                        <div class="input-append date" id="datetimepicker" data-date-format="yyyy/mm/dd-hh:ii">
+                                            <input id="matchTime" size="16" type="text">
+                                            <span class="add-on"><i class="icon-th"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="clearfix">
+                                <div class="floatLeft">
+                                    <label>注释</label>
+                                </div>
+                                <div class="flaotLeft">
+                                    <input id="matchHint" type="text" placeholder="如：XX队违规 可为空">
+                                </div>
+                            </div>
+
+                            <div class="clearfix">
+                                <div class="floatLeft">
+                                    <label>比赛性质</label>
+                                </div>
+
+                                <div class="floatLeft">
+                                    <select id="matchProperty">
+                                        <option value="0">小组赛</option>
+                                        <option value="32">1/32决赛</option>
+                                        <option value="16">1/16决赛</option>
+                                        <option value="8">1/8决赛</option>
+                                        <option value="4">1/4决赛</option>
+                                        <option value="3">3、4名</option>
+                                        <option value="2">半决赛</option>
+                                        <option value="1">决赛</option>
+                                        <option value="100">资格赛</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </fieldset>
+                    </div>
+
+                    <br>
+                    <div>
+                        <legend>球队信息</legend>
+
+                        <div class="floatLeft">
+                            <fieldset>
+                                <h4>A队</h4>
+                                <input id="matchTeamAName" type="text" placeholder="队名">
+                                <br>
+                                <input id="matchScoreA" type="text" placeholder="比分A" class="input-small">
+                                <input id="matchPenaltyA" type="text" placeholder="点球A(可空)" class="input-small" style="margin-left:20px;">
+                                <br>
+
+                                <div class="control-group info">
+                                    <h4>进球</h4>
+                                    <span class="help-inline">依次输入球员名字 以空格分离 如"XX XX"表示:XX球员在一场比赛中进了2个球</span>
+                                    <textarea id="goalAPlayers" style="width:80%;" placeholder="可空"></textarea>
+                                </div>
+
+                                <div class="control-group warning">
+                                    <h4>黄牌</h4>
+                                    <span class="help-inline">依次输入球员名字 以空格分离 如"XX XX"表示:XX球员在一场比赛中领了2张黄牌</span>
+                                    <textarea id="yellowCardAPlayers" style="width:80%;" placeholder="可空"></textarea>
+                                </div>
+
+                                <div class="control-group error">
+                                    <h4>红牌</h4>
+                                    <span class="help-inline">依次输入球员名字 以空格分离 如"XX XX"表示:XX球员在一场比赛中领了2张黄牌</span>
+                                    <textarea id="redCardAPlayers" style="width:80%;" placeholder="可空"></textarea>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <div style="floatLeft">
+                            <fieldset>
+                                <h4>B队</h4>
+                                <input id="matchTeamBName" type="text" placeholder="队名">
+                                <br>
+                                <input id="matchScoreB" type="text" placeholder="比分B" class="input-small">
+                                <input id="matchPenaltyB" type="text" placeholder="点球B(可空)" class="input-small" style="margin-left:20px;">
+
+                                <div class="control-group info">
+                                    <h4>进球</h4>
+                                    <span class="help-inline">依次输入球员名字 以空格分离 如"XX XX"表示:XX球员在一场比赛中进了2了球</span>
+                                    <textarea id="goalBPlayers" style="width:80%;" placeholder="可空"></textarea>
+                                </div>
+
+                                <div class="control-group warning">
+                                    <h4>黄牌</h4>
+                                    <span class="help-inline">依次输入球员名字 以空格分离 如"XX XX"表示:XX球员在一场比赛中领了2张黄牌</span>
+                                    <textarea id="yellowCardBPlayers" style="width:80%;" placeholder="可空"></textarea>
+                                </div>
+
+                                <div class="control-group error">
+                                    <h4>红牌</h4>
+                                    <span class="help-inline">依次输入球员名字 以空格分离 如"XX yy"表示:XX与yy球员在一场比赛中各领一张红牌</span>
+                                    <textarea id="redCardBPlayers" style="width:80%;" placeholder="可空"></textarea>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <br>
+                    <div>
+                        <legend>裁判表现</legend>
+                        <div style="text-align:center">
+                            <textarea id="matchReferee" style="width:100%; height:100px"></textarea>
+                        </div>
+                    </div>
+
+                    <br>
+                    <button id="matchSubmit" class="btn" onclick="matchDetailSubmit()">提交</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="submitFinishHint" style="background-color:#fff; border-radius:15px;color:#000;display:none;padding:20px;min-width:450px;min-height:180px;">
+        <h3 id="submitFinishHintLabel" align="center" style="margin-top:20px; font-size:">
+            更新成功，请刷新网页更新数据
+        </h3>
+    </div>
+
+</body>
+
+</html>
