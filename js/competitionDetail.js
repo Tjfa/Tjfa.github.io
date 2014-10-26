@@ -164,9 +164,8 @@ function addTeamsToGroupTable(data) {
                 else {
                     if (a.groupGoalCount>b.groupGoalCount) return -1;
                     else return 1;
-
                 }
-            ｝ 
+            } 
         }
     });
 
