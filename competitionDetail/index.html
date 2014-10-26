@@ -38,6 +38,9 @@
                 <a href="#teamTableTab" data-toggle="tab">球队列表</a>
             </li>
             <li>
+                 <a href="#groupTeamTab" data-toggle="tab">小组情况</a>
+            </li>
+            <li>
                 <a href="#matchTableTab" data-toggle="tab">比赛列表</a>
             </li>
             <li>
@@ -87,6 +90,29 @@
             </div>
 
 
+            <div class="tab-pane" id="groupTeamTab">
+                <div class="container">
+                    <table class="table" id="groupTeamTable" style="">
+                        <thead>
+                            <tr>
+                                <th style="">队名</th>
+                                <th style="">胜</th>
+                                <th style="">平</th>
+                                <th style="">负</th>
+                                <th style="">进</th>
+                                <th style="">失</th>
+                                <th style="">净</th>
+                                <th style="">积分</th>
+                            </tr>
+                        </thead>
+                        <tbody id="groupTeamTableBody">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
             <div class="tab-pane" id="matchTableTab">
                 <div class="container">
                     <table class="table table-striped table-bordered table-hover datatable" id="matchTable" style="">
@@ -107,6 +133,7 @@
                     </table>
                 </div>
             </div>
+
 
             <div class="tab-pane" id="addMatchTab">
                 <div class="container">
