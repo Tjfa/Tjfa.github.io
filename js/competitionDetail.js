@@ -156,8 +156,17 @@ function addTeamsToGroupTable(data) {
         } else {
             if (a.score>b.score) return -1;
             else if (a.score<b.score) return 1;
-            else if (a.groupGoalCount>b.groupGoalCount) return -1;
-            else return 1;
+            else ｛
+                var winLostCountA=a.groupGoalCount-a.groupMissCount;
+                var winLostCountB=b.groupGoalCount-b.groupMissCount;
+                if (winLostCountA>winLostCountB) return -1;
+                else if (winLostCountA<winLostCountB) return 1;
+                else {
+                    if (a.groupGoalCount>b.groupGoalCount) return -1;
+                    else return 1;
+
+                }
+            ｝ 
         }
     });
 
