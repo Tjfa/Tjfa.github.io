@@ -156,8 +156,16 @@ function addTeamsToGroupTable(data) {
         } else {
             if (a.score>b.score) return -1;
             else if (a.score<b.score) return 1;
-            else if (a.groupGoalCount>b.groupGoalCount) return -1;
-            else return 1;
+            else {
+                var winLostCountA=a.groupGoalCount-a.groupMissCount;
+                var winLostCountB=b.groupGoalCount-b.groupMissCount;
+                if (winLostCountA>winLostCountB) return -1;
+                else if (winLostCountA<winLostCountB) return 1;
+                else {
+                    if (a.groupGoalCount>b.groupGoalCount) return -1;
+                    else return 1;
+                }
+            } 
         }
     });
 
@@ -196,7 +204,9 @@ function addMatchesToTable(data) {
         if (val.referee && val.referee != "") {
             referee = val.referee;
         }
-        matchTable.fnAddData([competition.name, teamA.name, teamB.name, val.date.iso.substring(0, 19), score, penalty, val.isStart, val.matchProperty, hint, referee]);
+
+        var date=new Date( Date.parse( val.date.iso.substring(0,19) ) );
+        matchTable.fnAddData([competition.name, teamA.name, teamB.name, date.pattern("yyyy-MM-dd hh:mm:ss"), score, penalty, val.isStart, val.matchProperty, hint, referee]);
     });
 }
 
@@ -381,7 +391,7 @@ Date.prototype.pattern = function(fmt) {
     var o = {
         "M+": this.getMonth() + 1, //月份         
         "d+": this.getDate(), //日         
-        "h+": this.getHours() % 12 == 0 ? 12 : this.getHours() % 12, //小时         
+        "h+": this.getHours(), //小时         
         "H+": this.getHours(), //小时         
         "m+": this.getMinutes(), //分         
         "s+": this.getSeconds(), //秒         
