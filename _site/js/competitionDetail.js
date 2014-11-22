@@ -114,12 +114,42 @@ $(document).ready(function() {
         }
         competition = data;
         getAllPlayers(competition.competitionId, addPlayersToTable);
+        getAllPlayers(competition.competitionId, setupAtJs);
         getAllMatches(competition.competitionId, addMatchesToTable);
         getAllTeams(competition.competitionId, addTeamsToTable);
         getAllTeams(competition.competitionId, addTeamsToGroupTable);
     });
+
 });
 
+
+function setupAtJs(data) {
+
+    var map = {};
+    for (var i = 0; i < data.players.length; i++) {
+        var player = data.players[i];
+        player.pinyin = codefans_net_CC2PY(player.name);
+        map[player.name] = player.pinyin;
+    }
+
+    var players = [];
+
+    $.each(map, function(key, val) {
+        var object = {
+            playerName: key,
+            name: val,
+        }
+        players.push(object);
+    });
+
+
+    $(".playerAtJs").atwho({
+        at: "",
+        tpl: '<li data-value="${playerName}">${playerName}</li>',
+        data: players,
+        limit: 10,
+    });
+}
 
 function getTeamNameByTeamId(teamId, teams) {
     for (var i = 0; i < teams.length; i++) {
@@ -147,43 +177,43 @@ function addTeamsToTable(data) {
 
 function addTeamsToGroupTable(data) {
 
-    data.sort(function(a,b){
+    data.sort(function(a, b) {
         var groupNoA = a.groupNo && a.groupNo != "" ? a.groupNo : "无";
         var groupNoB = b.groupNo && b.groupNo != "" ? b.groupNo : "无";
-        if (groupNoA!=groupNoB){
-            if (groupNoA<groupNoB) return -1;
+        if (groupNoA != groupNoB) {
+            if (groupNoA < groupNoB) return -1;
             else return 1;
         } else {
-            if (a.score>b.score) return -1;
-            else if (a.score<b.score) return 1;
+            if (a.score > b.score) return -1;
+            else if (a.score < b.score) return 1;
             else {
-                var winLostCountA=a.groupGoalCount-a.groupMissCount;
-                var winLostCountB=b.groupGoalCount-b.groupMissCount;
-                if (winLostCountA>winLostCountB) return -1;
-                else if (winLostCountA<winLostCountB) return 1;
+                var winLostCountA = a.groupGoalCount - a.groupMissCount;
+                var winLostCountB = b.groupGoalCount - b.groupMissCount;
+                if (winLostCountA > winLostCountB) return -1;
+                else if (winLostCountA < winLostCountB) return 1;
                 else {
-                    if (a.groupGoalCount>b.groupGoalCount) return -1;
+                    if (a.groupGoalCount > b.groupGoalCount) return -1;
                     else return 1;
                 }
-            } 
+            }
         }
     });
 
-    var groupNo=null;
-    $.each(data,function(index,val) {
-        if (groupNo!=val.groupNo){
-            groupNo=val.groupNo;
-            $("#groupTeamTableBody").append('<tr class="info"><td>'+ groupNo+'</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>');
+    var groupNo = null;
+    $.each(data, function(index, val) {
+        if (groupNo != val.groupNo) {
+            groupNo = val.groupNo;
+            $("#groupTeamTableBody").append('<tr class="info"><td>' + groupNo + '</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>');
         }
-        var name='<th>'+val.name+'</th>';
-        var winCount='<th>'+val.groupWinCount+'</th>';
-        var drawCount='<th>'+val.groupDrawCount+'</th>';
-        var lostCount='<th>'+val.groupLostCount+'</th>';
-        var goalCount='<th>'+val.groupGoalCount+'</th>';
-        var missCount='<th>'+val.groupMissCount+'</th>';
-        var winMissCount='<th>'+(val.groupGoalCount-val.groupMissCount)+'</th>';
-        var score='<th>'+val.score+'</th>';
-        var element='<tr>' +name+winCount+drawCount+lostCount+goalCount+missCount+winMissCount+score+ '</tr>';
+        var name = '<th>' + val.name + '</th>';
+        var winCount = '<th>' + val.groupWinCount + '</th>';
+        var drawCount = '<th>' + val.groupDrawCount + '</th>';
+        var lostCount = '<th>' + val.groupLostCount + '</th>';
+        var goalCount = '<th>' + val.groupGoalCount + '</th>';
+        var missCount = '<th>' + val.groupMissCount + '</th>';
+        var winMissCount = '<th>' + (val.groupGoalCount - val.groupMissCount) + '</th>';
+        var score = '<th>' + val.score + '</th>';
+        var element = '<tr>' + name + winCount + drawCount + lostCount + goalCount + missCount + winMissCount + score + '</tr>';
         $("#groupTeamTableBody").append(element);
 
     });
@@ -205,7 +235,7 @@ function addMatchesToTable(data) {
             referee = val.referee;
         }
 
-        var date=new Date( Date.parse( val.date.iso.substring(0,19) ) );
+        var date = new Date(Date.parse(val.date.iso.substring(0, 19)));
         matchTable.fnAddData([competition.name, teamA.name, teamB.name, date.pattern("yyyy-MM-dd hh:mm:ss"), score, penalty, val.isStart, val.matchProperty, hint, referee]);
     });
 }
@@ -231,7 +261,7 @@ function findPlayerInArray(name, players) {
 //必须把相同球员的进球数等合并
 function matchDetailSubmit() {
     if ($("#matchSubmit").hasClass('disabled')) return;
-    var utcDate=new Date(datetimepicker.datetimepicker('getDate')-8*60*60*1000);
+    var utcDate = new Date(datetimepicker.datetimepicker('getDate') - 8 * 60 * 60 * 1000);
     var date = utcDate.pattern("yyyy-MM-dd hh:mm:ss");
     var hint = $('#matchHint').val();
     var matchProperty = $("#matchProperty").find("option:selected").attr("value");

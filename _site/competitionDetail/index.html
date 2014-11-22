@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="/css/dataTables.bootstrap.css">
     <link rel="stylesheet" type="text/css" href="/css/bootstrap_adapt.css">
     <link rel="stylesheet" type="text/css" href="/css/bootstrap-datetimepicker.css">
+    <link rel="stylesheet" type="text/css" href="/css/jquery.atwho.css">
 
     <script src="/js/jquery-1.11.0.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
@@ -16,7 +17,9 @@
     <script src="/js/bPopup.0.10.0.js"></script>
     <script src="/js/avos.js"></script>
     <script src="/js/competitionDetail.js"></script>
-
+    <script src="/js/pinyin.js"></script>
+    <script src="/js/jquery.atwho.js"></script>
+    <script src="/js/caret.js"></script>
 
     <style>
     .floatLeft {
@@ -38,7 +41,7 @@
                 <a href="#teamTableTab" data-toggle="tab">球队列表</a>
             </li>
             <li>
-                 <a href="#groupTeamTab" data-toggle="tab">小组情况</a>
+                <a href="#groupTeamTab" data-toggle="tab">小组情况</a>
             </li>
             <li>
                 <a href="#matchTableTab" data-toggle="tab">比赛列表</a>
@@ -203,20 +206,20 @@
 
                                 <div class="control-group info">
                                     <h4>进球</h4>
-                                    <span class="help-inline">依次输入球员名字 以空格分离 如"XX XX"表示:XX球员在一场比赛中进了2个球</span>
-                                    <textarea id="goalAPlayers" style="width:80%;" placeholder="可空"></textarea>
+                                    <span class="help-inline">提示说明：输入球员拼音首个字母即可，目前筛选的名字只会是数据库中有的球员(在之前的比赛中出现红黄牌或者进球)</span>
+                                    <textarea id="goalAPlayers" class="playerAtJs" style="width:80%;" placeholder="可空"></textarea>
                                 </div>
 
                                 <div class="control-group warning">
                                     <h4>黄牌</h4>
                                     <span class="help-inline">依次输入球员名字 以空格分离 如"XX XX"表示:XX球员在一场比赛中领了2张黄牌</span>
-                                    <textarea id="yellowCardAPlayers" style="width:80%;" placeholder="可空"></textarea>
+                                    <textarea id="yellowCardAPlayers" class="playerAtJs" style="width:80%;" placeholder="可空"></textarea>
                                 </div>
 
                                 <div class="control-group error">
                                     <h4>红牌</h4>
                                     <span class="help-inline">依次输入球员名字 以空格分离 如"XX XX"表示:XX球员在一场比赛中领了2张黄牌</span>
-                                    <textarea id="redCardAPlayers" style="width:80%;" placeholder="可空"></textarea>
+                                    <textarea id="redCardAPlayers" class="playerAtJs" style="width:80%;" placeholder="可空"></textarea>
                                 </div>
                             </fieldset>
                         </div>
@@ -232,19 +235,19 @@
                                 <div class="control-group info">
                                     <h4>进球</h4>
                                     <span class="help-inline">依次输入球员名字 以空格分离 如"XX XX"表示:XX球员在一场比赛中进了2了球</span>
-                                    <textarea id="goalBPlayers" style="width:80%;" placeholder="可空"></textarea>
+                                    <textarea id="goalBPlayers" class="playerAtJs" style="width:80%;" placeholder="可空"></textarea>
                                 </div>
 
                                 <div class="control-group warning">
                                     <h4>黄牌</h4>
                                     <span class="help-inline">依次输入球员名字 以空格分离 如"XX XX"表示:XX球员在一场比赛中领了2张黄牌</span>
-                                    <textarea id="yellowCardBPlayers" style="width:80%;" placeholder="可空"></textarea>
+                                    <textarea id="yellowCardBPlayers" class="playerAtJs" style="width:80%;" placeholder="可空"></textarea>
                                 </div>
 
                                 <div class="control-group error">
                                     <h4>红牌</h4>
                                     <span class="help-inline">依次输入球员名字 以空格分离 如"XX yy"表示:XX与yy球员在一场比赛中各领一张红牌</span>
-                                    <textarea id="redCardBPlayers" style="width:80%;" placeholder="可空"></textarea>
+                                    <textarea id="redCardBPlayers" class="playerAtJs" style="width:80%;" placeholder="可空"></textarea>
                                 </div>
                             </fieldset>
                         </div>
