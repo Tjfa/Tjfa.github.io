@@ -231,8 +231,8 @@ function findPlayerInArray(name, players) {
 //必须把相同球员的进球数等合并
 function matchDetailSubmit() {
     if ($("#matchSubmit").hasClass('disabled')) return;
-
-    var date = datetimepicker.datetimepicker('getDate').pattern("yyyy-MM-dd hh:mm:ss");
+    var utcDate=new Date(datetimepicker.datetimepicker('getDate')-8*60*60*1000);
+    var date = utcDate.pattern("yyyy-MM-dd hh:mm:ss");
     var hint = $('#matchHint').val();
     var matchProperty = $("#matchProperty").find("option:selected").attr("value");
     var teamAName = $.trim($('#matchTeamAName').val());
