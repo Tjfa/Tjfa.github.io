@@ -5,11 +5,14 @@
 		  <link rel="stylesheet" type="text/css" href="/css/bootstrap-responsiv.css">
 		  <link rel="stylesheet" type="text/css" href="/css/dataTables.bootstrap.css">
 	    <link rel="stylesheet" type="text/css" href="/css/bootstrap_adapt.css">
+      <link rel="stylesheet" type="text/css" href="/css/jquery-confirm-1.7.3.min.css">
 
-		  <script src="/js/jquery-1.11.0.min.js"></script>
+		  <script src="/js/jquery-2.0.3.min.js"></script>
 		  <script src="/js/bootstrap.min.js"></script>
 		  <script src="/js/jquery.dataTables.1.9.4.js"></script>
 		  <script src="/js/dataTables.bootstrap.js"></script>
+      <script src="/js/jquery-ui-1.11.4.min.js"></script>
+      <script src="/js/jquery-confirm.1.7.3.min.js"></script>
 
       <script src="/js/avos.js"></script>
 		  <script src="/js/competition.js"></script>
@@ -60,21 +63,21 @@
   					<div class="control-group" >
     					<label class="control-label" >赛事名称</label>
     					<div class="controls">
-      						<input type="text" id="competitionName">
+      						<input type="text" id="competitionName" placeholder="足协杯">
     					</div>
   					</div>
 
   					<div class="control-group">
     					<label class="control-label">赛事编号</label>
     					<div class="controls">
-      						<input type="text" id="competitionNo">
+      						<input type="text" id="competitionNo" placeholder="25">
     					</div>
   					</div>
 
   					<div class="control-group">
     					<label class="control-label" >赛事年份</label>
     					<div class="controls">
-      						<input type="text" id="competitionTimeYear">
+      						<input type="text" id="competitionTimeYear" placeholder="2015">
     					</div>
   					</div>
 
@@ -82,8 +85,8 @@
     					<label class="control-label" >学期选择</label>
     					<div class="controls">
       						<select class="input-small" id="competitionTimeTerm">
-  								<option>上学期</option>
-  								<option>下学期</option>
+  								<option value="1">上学期</option>
+  								<option value="2">下学期</option>
   							</select>
     					</div>
   					</div>
@@ -93,9 +96,9 @@
     					<label class="control-label" >赛事状态</label>
     					<div class="controls">
       						<select class="input-small" id="competitionState">
-  								<option>未开始</option>
-  								<option>进行中</option>
-  								<option>已经结束</option>
+  								  <option value="0">未开始</option>
+  								  <option value="1">进行中</option>
+  								  <option value="2">已经结束</option>
   							</select>
     					</div>
   					</div>  		
@@ -103,17 +106,16 @@
   					<div class="control-group">
   						<div class="controls">
   							<div id="competitionType">
-  								<input type="radio" name="competitionType"  id="competitionBenbu" value="0" checked> 本部
-  								<input type="radio" name="competitionType" id="competitionJiading" value="1" > 嘉定
+  								<input type="radio" name="competitionType" type="1" /> 本部
+  								<input type="radio" name="competitionType" type="2" /> 嘉定
   							</div>
-						</div>
+						  </div>
   					</div>
-
-
 				</form>
+
   			</div>
   			<div class="modal-footer">
-  				<button class="btn btn-primary">新建</button>
+  				<button class="btn btn-primary" id="newCompetitionButton">新建</button>
     			<button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
   			</div>
 		</div>

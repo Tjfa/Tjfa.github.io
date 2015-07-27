@@ -1,5 +1,10 @@
-const appKey = "ks5u25gdqcm5laox6oj9gfq195p4ymfaytb9eix5fb6yq6nt";
-const appId = "n2iby57nxdhh1cnqw27eocg6lkujbovtgvb7ezzjtb9wpqqf";
+//debug
+const appKey = "v3cdupbp0fcv9b9712qvp45qb0efq6hy0iqttu3nvd80d6ts";
+const appId = "yyy2oocar74kh9kywwg4z9wdqzjelmjs9fsju5fm01r9mkdg";
+
+//release
+// const appKey = "ks5u25gdqcm5laox6oj9gfq195p4ymfaytb9eix5fb6yq6nt";
+// const appId = "n2iby57nxdhh1cnqw27eocg6lkujbovtgvb7ezzjtb9wpqqf";
 
 function getUrlParam(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
@@ -211,6 +216,49 @@ function callCloudFunction(functionName, params, callback) {
             }
         }
     });
+}
 
+function addCompetitionToCloud(params, callback) {
+    $.ajax({
+        url: 'https://api.leancloud.cn/1.1/classes/Competition',
+        type: 'post',
+        headers: {
+            "X-AVOSCloud-Application-Id": appId,
+            "X-AVOSCloud-Application-Key": appKey,
+            "Content-Type": "application/json",
+        },
+        data: JSON.stringify(params),
+        success: function(data) {
+            console.log(data)
+            if (callback) {
+                callback(data)
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            if (callback) {
+                callback("error")
+            }
+        }
+    })
+}
 
+function deleteCompetitionToCloud(params, callback) {
+    $.$.ajax({
+        url: 'https://api.leancloud.cn/1.1/classes/Competition',
+        type: 'DELETE)',
+        headers: {
+            "X-AVOSCloud-Application-Id": appId,
+            "X-AVOSCloud-Application-Key": appKey,
+            "Content-Type": "application/json",
+        },
+        data: JSON.stringify(params),
+    })
+    .done(function() {
+        console.log("success");
+    })
+    .fail(function() {
+        if (callback) {
+           callback("error")
+        }
+    })    
 }
