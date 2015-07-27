@@ -2,7 +2,7 @@
 // const appKey = "v3cdupbp0fcv9b9712qvp45qb0efq6hy0iqttu3nvd80d6ts";
 // const appId = "yyy2oocar74kh9kywwg4z9wdqzjelmjs9fsju5fm01r9mkdg";
 
-release
+// release
 const appKey = "ks5u25gdqcm5laox6oj9gfq195p4ymfaytb9eix5fb6yq6nt";
 const appId = "n2iby57nxdhh1cnqw27eocg6lkujbovtgvb7ezzjtb9wpqqf";
 
@@ -13,11 +13,9 @@ function getUrlParam(name) {
     return null; //返回参数值
 }
 
-
 /*
  * 如果找不到这个player  就要去 创建一个player 注意创建的playerId
  */
-
 function updatePlayer(name, goalCount, yellowCard, redCard, competitionId, teamId) {
     var whereJson = {
         name: name,
@@ -240,25 +238,4 @@ function addCompetitionToCloud(params, callback) {
             }
         }
     })
-}
-
-function deleteCompetitionToCloud(params, callback) {
-    $.$.ajax({
-        url: 'https://api.leancloud.cn/1.1/classes/Competition',
-        type: 'DELETE)',
-        headers: {
-            "X-AVOSCloud-Application-Id": appId,
-            "X-AVOSCloud-Application-Key": appKey,
-            "Content-Type": "application/json",
-        },
-        data: JSON.stringify(params),
-    })
-    .done(function() {
-        console.log("success");
-    })
-    .fail(function() {
-        if (callback) {
-           callback("error")
-        }
-    })    
 }

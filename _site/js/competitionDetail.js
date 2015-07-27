@@ -21,13 +21,6 @@ $(document).ready(function() {
         stepping:15,
     });
     
-    // $('#datetimepicker').data("DateTimePicker").date(new Date())
-
-    // datetimepicker.datetimepicker('update', new Date());
-   // $('#datetimepicker').datetimepicker();
-   // datetimepicker = $('#datetimepicker').datetimepicker()
-
-
     objectId = getUrlParam('objectId');
     console.log(objectId);
 

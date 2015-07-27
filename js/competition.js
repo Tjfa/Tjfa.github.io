@@ -83,9 +83,10 @@ function showEdit($obj) {
     $("#createCompetitionModal").modal('show');
 }
 
-function deleteCompetition() {
+function deleteCompetition(objectId) {
+
     $.confirm({
-        content: '删除后不可以恢复，删除后不可以恢复，删除后不可以恢复！！！',
+        text: '删除后不可以恢复，删除后不可以恢复，删除后不可以恢复！！！',
         title: '重要的事情说三遍',
         confirmButton: '确定',
         cancelButton: '乖！我错了！',
@@ -93,7 +94,11 @@ function deleteCompetition() {
         confirmButtonClass: "btn-danger",
         cancelButtonClass: "btn-primary",
         confirm: function () {
-
+            callCloudFunction("deleteCompetition", {objectId: objectId}, function(result) {
+                if (result != "error") {
+                    reloadData()
+                }
+            })
         },
     })
 }
@@ -124,7 +129,7 @@ function addCompetitionsToTable(data) {
 
         var detail = "<a class='btn btn-info' href='competitionDetail.php'>赛事信息</a>"
         var edit = "<a class='edit btn btn-primary'>编辑</a>";
-        var deleteItem = "<a class='delete btn btn-danger'>删除</a>";
+        var deleteItem = "<a class='delete btn btn-danger' objectId='" + val.objectId + "'>删除</a>";
         var detailItem = "<a class='showDetail btn btn-info' objectId='" + val.objectId + "'>详情</a>";
 
         oTable.fnAddData([val.name, val.number, isStart, time, type, detail, edit, deleteItem, detailItem]);
@@ -132,13 +137,13 @@ function addCompetitionsToTable(data) {
 
 
     oTable.find("a.edit").click(function(event) {
-        $obj = $(this).parent().parent();
+        var $obj = $(this).parent().parent();
         showEdit($obj);
     });
 
     oTable.find("a.delete").click(function(event) {
-        console.log($(this).parent().parent());
-        deleteCompetition()
+        var $objectId = $(this).attr('objectId');
+        deleteCompetition($objectId)
     });
 
     oTable.find("a.showDetail").click(function(event) {
