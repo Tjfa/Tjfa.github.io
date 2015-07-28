@@ -1,15 +1,29 @@
+    <script>
+        function clickNavigationItem(url) {
+            window.location.href =  "/" + url + "?objectId=" + getUrlParam('objectId');
+        }
+    </script>
 
-
-<div id="navigationContainer" class="navbar navbar-inverse">
-	<div class="navbar-inner" style='border-radius: 0px'>
-		<ul class="nav" style="margin-left: 11%;">
-			<li><a href="index.php">Home</a></li>
-			<li><a href="competition.php">Competition</a></li>
-			<li><a href="match.php">Match</a><li>
-			<li><a href="team.php">Team</a></li>
-			<li><a href="player.php">Player</a></li>
-			<li><a href="news.php">News</a></li>
-			<li><a href="admin.php">Admin</a></li>
-		</ul>
-	</div>
-</div>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="javascript:clickNavigationItem('player')">球员列表</a>
+                    </li>
+                    <li>
+                        <a href="javascript:clickNavigationItem('team')">球队列表</a>
+                    </li>
+                    <li>
+                        <a href="javascript:clickNavigationItem('group')" >小组情况</a>
+                    </li>
+                    <li>
+                        <a href="javascript:clickNavigationItem('match')">比赛列表</a>
+                    </li>
+                    <li>
+                        <a href="javascript:clickNavigationItem('addMatch')">添加比赛</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
