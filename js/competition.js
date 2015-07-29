@@ -149,7 +149,7 @@ function addCompetitionsToTable(data) {
     oTable.find("a.showDetail").click(function(event) {
         var objectId = $(this).attr("objectId");
         getCompetitionByObjectId(objectId, function(data) {
-            window.location = "/competitionDetail?objectId=" + data.objectId;
+            window.location = "/player?objectId=" + data.objectId;
         });
 
     });

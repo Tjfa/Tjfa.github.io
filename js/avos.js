@@ -6,13 +6,6 @@
 const appKey = "ks5u25gdqcm5laox6oj9gfq195p4ymfaytb9eix5fb6yq6nt";
 const appId = "n2iby57nxdhh1cnqw27eocg6lkujbovtgvb7ezzjtb9wpqqf";
 
-function getUrlParam(name) {
-    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
-    var r = window.location.search.substr(1).match(reg); //匹配目标参数
-    if (r != null) return unescape(r[2]);
-    return null; //返回参数值
-}
-
 /*
  * 如果找不到这个player  就要去 创建一个player 注意创建的playerId
  */
