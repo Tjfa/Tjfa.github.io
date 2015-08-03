@@ -58,7 +58,6 @@ function findPlayerInArray(name, players) {
         if (name == player.name) return player;
     }
 
-
     player = {
         name: name,
         goalCount: 0,

@@ -28,7 +28,7 @@ $(document).ready(function() {
     getCompetitionByObjectId(objectId, function(data) {
         if (!data.competitionId) {
             window.location = "/";
-            return;
+            return
         }
         competition = data;
         getAllPlayers(competition.competitionId, addPlayersToTable);
