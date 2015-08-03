@@ -1,5 +1,5 @@
 var oTable;
-
+var data
 
 const nonstartStr = "未开始";
 const startingStr = "进行中";
@@ -35,51 +35,44 @@ $(document).ready(function() {
 
 function clearForm() {
     $("form").find("input").val("");
-    $("form").find("select").find("option:first").attr("selected", true);
+    $("form").find("option").attr("selected", false);
+    $("form").find("select").find("option:first")[0].selected = true;
     $("form").find("#competitionType").find("input:radio").get(0).checked = true;
 }
 
-function showEdit($obj) {
-    if (!$obj) {
-        clearForm();
-        $("#competitionId").val(0);
-    } 
-    else {
-        $("#competitionId").val($obj.find("td:eq(0)").html());
-        $("#competitionName").val($obj.find("td:eq(1)").html());
-        $("#competitionNo").val($obj.find("td:eq(2)").html());
-        var state = $obj.find("td:eq(3)").html();
-        if (state == nonstartStr) {
-            $("#competitionState").find("option:first").attr("selected", true);
+function getCompetitionFromData(objectId) {
+    var result = null
+    $.each(data, function(index, val) {
+        if (val.objectId == objectId) {
+            result = val
+            return val
         } 
-        else if (state == startingStr) {
-            $("#competitionState").find("option:eq(1)").attr("selected", true);
-        } 
-        else {
-            $("#competitionState").find("option:eq(2)").attr("selected", true);
-        }
+    });
 
-        var time = $obj.find("td:eq(4)").html();
-        $("#competitionTimeYear").val(time.substring(0, 4));
+    return result
+}
 
-        var term = time.substring(4);
+function showEdit(val) {
+    clearForm()
+    if (val != null) {
+        $("#competetitionObjectId").val(val.objectId)
+        $("#competitionName").val(val.name);
+        $("#competitionNo").val(val.number)
+        $("#competitionState").find('option:eq('+val.isStart+')')[0].selected = true;
+        $("#competitionTimeYear").val(val.time.substring(0, val.time.length - 1));
 
-        if (term == firstTerm) {
-            $("#competitionTimeTerm").find("option:first").attr("selected", true);
+        if (val.time[val.time.length - 1] == '1') {
+            $("#competitionTimeTerm").find("option:first")[0].selected = true; 
         } 
         else {
-            $("#competitionTimeTerm").find("option:eq(1)").attr("selected", true);
+            $("#competitionTimeTerm").find("option:eq(1)")[0].selected = true;
         }
-
-        var type = $obj.find("td:eq(5)").html();
-        if (type == typeBenbu) {
-            $("form").find("#competitionType").find("input:radio").get(0).checked = true;
-        }
-        else {
-            $("form").find("#competitionType").find("input:radio").get(1).checked = true;
-        }
+        $("form").find("#competitionType").find("input:radio").get(val.type - 1).checked = true;
+        $("#newCompetitionButton").html("更新");
+    }      
+    else{
+        $("#newCompetitionButton").html("新建");
     }
-
     $("#createCompetitionModal").modal('show');
 }
 
@@ -103,9 +96,9 @@ function deleteCompetition(objectId) {
     })
 }
 
-function addCompetitionsToTable(data) {
+function addCompetitionsToTable(competitions) {
+    data = competitions
     $.each(data, function(index, val) {
-
         var isStart;
         if (val.isStart == 0) {
             isStart = nonstartStr;
@@ -121,24 +114,23 @@ function addCompetitionsToTable(data) {
         } 
         else type = typeJiading;
 
-        var time = val.time.substring(0, 4);
-        if (val.time[4] == '1') {
+        var time = val.time.substring(0, val.time.length - 1);
+        if (val.time[val.time.length - 1] == '1') {
             time += firstTerm;
         } 
         else time += secondTerm;
 
-        var detail = "<a class='btn btn-info' href='competitionDetail.php'>赛事信息</a>"
-        var edit = "<a class='edit btn btn-primary'>编辑</a>";
+        var edit = "<a class='edit btn btn-primary' objectId='" + val.objectId + "'>更新</a>";
         var deleteItem = "<a class='delete btn btn-danger' objectId='" + val.objectId + "'>删除</a>";
         var detailItem = "<a class='showDetail btn btn-info' objectId='" + val.objectId + "'>详情</a>";
 
-        oTable.fnAddData([val.name, val.number, isStart, time, type, detail, edit, deleteItem, detailItem]);
+        oTable.fnAddData([val.name, val.number, isStart, time, type, edit, deleteItem, detailItem]);
     });
 
-
     oTable.find("a.edit").click(function(event) {
-        var $obj = $(this).parent().parent();
-        showEdit($obj);
+        var objectId = $(this).attr("objectId");
+        var competetition = getCompetitionFromData(objectId) 
+        showEdit(competetition)
     });
 
     oTable.find("a.delete").click(function(event) {
@@ -148,15 +140,11 @@ function addCompetitionsToTable(data) {
 
     oTable.find("a.showDetail").click(function(event) {
         var objectId = $(this).attr("objectId");
-        getCompetitionByObjectId(objectId, function(data) {
-            window.location = "/player?objectId=" + data.objectId;
-        });
-
+        window.location = "/player?objectId=" + data.objectId;
     });
 }
 
-function reloadData()
-{
+function reloadData()   {
     oTable.fnClearTable()
     getAllCompetition(addCompetitionsToTable);
 }
@@ -164,6 +152,7 @@ function reloadData()
 function addCompetition() {
     if ($("#newCompetitionButton").hasClass('disabled')) return;
 
+    var objectId = $("#competetitionObjectId").val()
     var competitionName = $("#competitionName").val()
     var competitionNo = $("#competitionNo").val()
     var competitionTime = $("#competitionTimeYear").val()
@@ -172,51 +161,50 @@ function addCompetition() {
     var competitionType = $('input[name=competitionType]:checked', '#competitionType').attr("type")
 
     if (competitionName == "") {
-        $( "#createCompetitionModal" ).effect("shake", {times:2} , 500);
+        $("#createCompetitionModal").effect("shake", {times:2} , 500);
         $("#competitionName").focus();
         return 
     }
 
     if (competitionNo == "") {
-        $( "#createCompetitionModal" ).effect("shake", {times:2} , 500);
+        $("#createCompetitionModal").effect("shake", {times:2} , 500);
         $("#competitionNo").focus();
         return 
     }
 
     if (competitionTime == "") {
-        $( "#createCompetitionModal" ).effect("shake", {times:2} , 500);
+        $("#createCompetitionModal").effect("shake", {times:2} , 500);
         $("#competitionTimeYear").focus();
         return 
     }
 
     if (!parseInt(competitionNo)) {
-        $( "#createCompetitionModal" ).effect("shake", {times:2} , 500);
+        $("#createCompetitionModal").effect("shake", {times:2} , 500);
         $("#competitionNo").focus()
         return 
     }
 
     var params = {
+        "objectId": objectId,
         "name": competitionName,
         "number": parseInt(competitionNo),
         "time": competitionTime + competitionTerm,
         "type": parseInt(competitionType),
         "isStart": parseInt(competitionState)
     }
-
     $("#newCompetitionButton").addClass('disabled')
-    $("#newCompetitionButton").attr('disabled', 'disabled');
-    $("#newCompetitionButton").html("创建中")
 
-    addCompetitionToCloud(params, function(data) {
+    var title = $("#newCompetitionButton").html()
+    $("#newCompetitionButton").html(title + "中")
+    addOrUpdateCompetitionToCloud(params, function(data) {
         $("#newCompetitionButton").removeClass('disabled');
-        $("#newCompetitionButton").removeAttr('disabled')
-        $("#newCompetitionButton").removeClass('新建');
+        $("#newCompetitionButton").html(title);
 
         if (data == "error") {
-            alert("创建失败，请稍后再试")
+            alert(title + "失败，请稍后再试")
         }
         else {
-            $( "#createCompetitionModal" ).dismiss()
+            $( "#createCompetitionModal" ).modal('hide')
             reloadData()
         }
     })

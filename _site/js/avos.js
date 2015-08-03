@@ -2,7 +2,7 @@
 // const appKey = "v3cdupbp0fcv9b9712qvp45qb0efq6hy0iqttu3nvd80d6ts";
 // const appId = "yyy2oocar74kh9kywwg4z9wdqzjelmjs9fsju5fm01r9mkdg";
 
-// // release
+// release
 const appKey = "ks5u25gdqcm5laox6oj9gfq195p4ymfaytb9eix5fb6yq6nt";
 const appId = "n2iby57nxdhh1cnqw27eocg6lkujbovtgvb7ezzjtb9wpqqf";
 
@@ -231,4 +231,37 @@ function addCompetitionToCloud(params, callback) {
             }
         }
     })
+}
+
+function updateCompetitionToCloud(params, callback) {
+    $.ajax({
+        url: 'https://api.leancloud.cn/1.1/classes/Competition/' + params.objectId,
+        type: 'put',
+        headers: {
+            "X-AVOSCloud-Application-Id": appId,
+            "X-AVOSCloud-Application-Key": appKey,
+            "Content-Type": "application/json",
+        },
+        data: JSON.stringify(params),
+        success: function(data) {
+            console.log(data)
+            if (callback) {
+                callback(data)
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            if (callback) {
+                callback("error")
+            }
+        }
+    })
+}
+
+function addOrUpdateCompetitionToCloud(params, callback) {
+    if (params.objectId == "") {
+        addCompetitionToCloud(params, callback)
+    }
+    else {
+        updateCompetitionToCloud(params, callback)
+    }
 }
