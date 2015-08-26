@@ -40,16 +40,14 @@ Date.prototype.pattern = function(fmt) {
     return fmt;
 }
 
-
-function getTeamNameByTeamId(teamId, teams) {
+function findTeamInArray(teamId, teams) {
     for (var i = 0; i < teams.length; i++) {
         var val = teams[i];
-        if (val.teamId == teamId) {
+        if (val.get("teamId") == teamId) {
             return val;
         }
     }
 }
-
 
 function findPlayerInArray(name, players) {
     var player = null;

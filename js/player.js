@@ -1,16 +1,11 @@
-var playerTable;
-var competition;
-
-const nonstartStr = "未开始";
-const doneStr = "已结束";
-
-const firstTerm = "上学期";
-const secondTerm = "下学期";
-
+var playerTable
+var competition
+var teams
+var players
 
 $(document).ready(function() {
 
-    var objectId = getUrlParam('objectId');
+    var objectId = getUrlParam('objectId')
 
     playerTable = $('#playerTable').dataTable({
         "sPaginationType": "bootstrap",
@@ -23,22 +18,41 @@ $(document).ready(function() {
 
         },
         "bPaginate": false,
-    });
+    })
 
-    getCompetitionByObjectId(objectId, function(data) {
-        if (!data.competitionId) {
-            window.location = "/";
+    getCompetitionByObjectId(objectId, function(data, error) {
+        if (!data) {
+            window.location = "/"
             return
         }
-        competition = data;
-        getAllPlayers(competition.competitionId, addPlayersToTable);
-    });
+        competition = data
+        getAllTeams(competition.get("competitionId"), function(data, error) {
+            if (error) {
+                alert(error)
+                return 
+            }
+            else {
+                teams = data
+                getAllPlayers(competition.get("competitionId"), addPlayersToTable)
+            }
 
-});
+        })       
+    })
 
-function addPlayersToTable(data) {
-    $.each(data.players, function(index, val) {
-        var team = getTeamNameByTeamId(val.teamId, data.teams);
-        playerTable.fnAddData([competition.name, val.name, team.name, val.goalCount, val.yellowCard, val.redCard]);
-    });
+})
+
+function addPlayersToTable(data, error) {
+
+    if (error) {
+        alert(error)
+        return 
+    }
+
+    players = data
+    $.each(players, function(index, val) {
+        var team = findTeamInArray(val.get("teamId"), teams)
+        if (team) {
+            playerTable.fnAddData([competition.get("name"), val.get("name"), team.get("name"), val.get("goalCount"), val.get("yellowCard"), val.get("redCard")])
+        }
+    })
 }

@@ -1,187 +1,118 @@
 //debug
-// const appKey = "v3cdupbp0fcv9b9712qvp45qb0efq6hy0iqttu3nvd80d6ts";
-// const appId = "yyy2oocar74kh9kywwg4z9wdqzjelmjs9fsju5fm01r9mkdg";
+const appKey = "v3cdupbp0fcv9b9712qvp45qb0efq6hy0iqttu3nvd80d6ts"
+const appId = "yyy2oocar74kh9kywwg4z9wdqzjelmjs9fsju5fm01r9mkdg"
 
 // release
-const appKey = "ks5u25gdqcm5laox6oj9gfq195p4ymfaytb9eix5fb6yq6nt";
-const appId = "n2iby57nxdhh1cnqw27eocg6lkujbovtgvb7ezzjtb9wpqqf";
+// const appKey = "ks5u25gdqcm5laox6oj9gfq195p4ymfaytb9eix5fb6yq6nt"
+// const appId = "n2iby57nxdhh1cnqw27eocg6lkujbovtgvb7ezzjtb9wpqqf"
 
-/*
- * 如果找不到这个player  就要去 创建一个player 注意创建的playerId
- */
-function updatePlayer(name, goalCount, yellowCard, redCard, competitionId, teamId) {
-    var whereJson = {
-        name: name,
-        competitionId: competitionId,
-        teamId: teamId
-    };
-    var where = JSON.stringify(whereJson);
-    $.ajax({
-        url: 'https://leancloud.cn/1.1/classes/Player',
-        type: 'get',
-        headers: {
-            "X-AVOSCloud-Application-Id": appId,
-            "X-AVOSCloud-Application-Key": appKey,
-        },
-        data: {
-            where: where,
-            limit: 1
-        },
-        success: function(data) {
-            console.log(data.results[0]);
-        },
-    });
+
+var Competition
+var Match
+var Player
+var Team
+var User
+
+
+function avInitialize() {
+    AV.initialize(appId, appKey)
+    Competition = AV.Object.extend("Competition")
+    Match = AV.Object.extend("Match")
+    Player = AV.Object.extend("Player")
+    Team = AV.Object.extend("Team")
+    User = AV.Object.extend("_User")
 }
 
+$(document).ready(function() {
+    avInitialize()
+})
 
 function getCompetitionByObjectId(objectId, callback) {
-    $.ajax({
-        url: 'https://leancloud.cn/1.1/classes/Competition/' + objectId,
-        type: 'get',
-        headers: {
-            "X-AVOSCloud-Application-Id": appId,
-            "X-AVOSCloud-Application-Key": appKey,
-        },
-        success: function(data) {
+    var query = new AV.Query(Competition)
+    query.get(objectId, {
+        success: function(competition) {
             if (callback) {
-                callback(data);
+                callback(competition, null)
             }
         },
-    });
+        error: function(object, error) {
+            console.log(error)
+            if (callback) {
+                callback(null, error)
+            }
+        }
+    }) 
 }
 
 function getAllCompetition(callback) {
-    $.ajax({
-        url: 'https://leancloud.cn/1.1/classes/Competition',
-        type: 'get',
-        headers: {
-            "X-AVOSCloud-Application-Id": appId,
-            "X-AVOSCloud-Application-Key": appKey,
-        },
-        data: {
-            limit: 1000
-        },
-        success: function(data) {
+    var query = new AV.Query(Competition)
+    query.limit(1000)
+    query.find({
+        success: function(competitions) {
             if (callback) {
-                console.log(data.results);
-                callback(data.results);
+                callback(competitions, null)
             }
         },
-    });
-}
+        error: function(error) {
+            if (callback) {
+                callback(null, error)
+            }
+        }
+    })
+ }
 
 function getAllTeams(competitionId, callback) {
-    var whereJson = {
-        competitionId: competitionId
-    };
-    var where = JSON.stringify(whereJson);
-    $.ajax({
-        url: 'https://leancloud.cn/1.1/classes/Team',
-        type: 'get',
-        headers: {
-            "X-AVOSCloud-Application-Id": appId,
-            "X-AVOSCloud-Application-Key": appKey,
-        },
-        data: {
-            where: where,
-            limit: 1000
-        },
-        success: function(data) {
+    var query = new AV.Query(Team)
+    query.limit(1000)
+    query.equalTo("competitionId", competitionId);
+    query.find({
+        success: function(teams) {
             if (callback) {
-                callback(data.results);
+                callback(teams, null)
             }
         },
-    });
+        error: function(error) {
+            if (callback) {
+                callback(null, error)
+            }
+        }
+    })
 }
 
 function getAllPlayers(competitionId, callback) {
-    var results = {};
-    var whereJson = {
-        competitionId: competitionId
-    };
-    var where = JSON.stringify(whereJson);
-
-    getAllTeams(competitionId, function(teams) {
-        results.teams = teams;
-        $.ajax({
-            url: 'https://leancloud.cn/1.1/classes/Player',
-            type: 'get',
-            headers: {
-                "X-AVOSCloud-Application-Id": appId,
-                "X-AVOSCloud-Application-Key": appKey,
-            },
-            data: {
-                limit: 1000,
-                where: where
-            },
-            success: function(data) {
-                if (callback) {
-                    results.players = data.results;
-                    callback(results);
-                }
-
-            },
-        });
-    });
+    var query = new AV.Query(Player)
+    query.limit(1000)
+    query.equalTo("competitionId", competitionId);
+    query.find({
+        success: function(players) {
+            if (callback) {
+                callback(players, null)
+            }
+        },
+        error: function(error) {
+            if (callback) {
+                callback(null, error)
+            }
+        }
+    })
 }
 
 function getAllMatches(competitionId, callback) {
-    var results = {};
-    var whereJson = {
-        competitionId: competitionId
-    };
-    var where = JSON.stringify(whereJson);
-
-    getAllTeams(competitionId, function(teams) {
-        results.teams = teams;
-        $.ajax({
-            url: 'https://leancloud.cn/1.1/classes/Match',
-            type: 'get',
-            headers: {
-                "X-AVOSCloud-Application-Id": appId,
-                "X-AVOSCloud-Application-Key": appKey,
-            },
-            data: {
-                limit: 1000,
-                where: where
-            },
-            success: function(data) {
-                if (callback) {
-                    results.matches = data.results;
-                    console.log(results);
-                    callback(results);
-                }
-            },
-        });
-    });
-}
-
-function getTeamByName(competitionId, teamName, callback) {
-    var whereJson = {
-        competitionId: competitionId,
-        name: teamName,
-    };
-    var where = JSON.stringify(whereJson);
-    $.ajax({
-        url: 'https://leancloud.cn/1.1/classes/Player',
-        type: 'get',
-        headers: {
-            "X-AVOSCloud-Application-Id": appId,
-            "X-AVOSCloud-Application-Key": appKey,
-        },
-        data: {
-            limit: 1,
-            where: where
-        },
-        success: function(data) {
+    var query = new AV.Query(Match)
+    query.limit(1000)
+    query.equalTo("competitionId", competitionId);
+    query.find({
+        success: function(matches) {
             if (callback) {
-                results.players = data.results;
-                console.log(results);
-                callback(results);
+                callback(matches, null)
             }
-
         },
-    });
+        error: function(error) {
+            if (callback) {
+                callback(null, error)
+            }
+        }
+    })
 }
 
 function callCloudFunction(functionName, params, callback) {
@@ -196,72 +127,15 @@ function callCloudFunction(functionName, params, callback) {
         data: JSON.stringify(params),
         success: function(data) {
             if (callback) {
-                console.log(data.result);
-                callback(data.result);
+                console.log(data.result)
+                callback(data.result)
             }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
-            console.log(textStatus);
-            if (callback) {
-                callback("error");
-            }
-        }
-    });
-}
-
-function addCompetitionToCloud(params, callback) {
-    $.ajax({
-        url: 'https://api.leancloud.cn/1.1/classes/Competition',
-        type: 'post',
-        headers: {
-            "X-AVOSCloud-Application-Id": appId,
-            "X-AVOSCloud-Application-Key": appKey,
-            "Content-Type": "application/json",
-        },
-        data: JSON.stringify(params),
-        success: function(data) {
-            console.log(data)
-            if (callback) {
-                callback(data)
-            }
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            console.log(textStatus)
             if (callback) {
                 callback("error")
             }
         }
     })
-}
-
-function updateCompetitionToCloud(params, callback) {
-    $.ajax({
-        url: 'https://api.leancloud.cn/1.1/classes/Competition/' + params.objectId,
-        type: 'put',
-        headers: {
-            "X-AVOSCloud-Application-Id": appId,
-            "X-AVOSCloud-Application-Key": appKey,
-            "Content-Type": "application/json",
-        },
-        data: JSON.stringify(params),
-        success: function(data) {
-            console.log(data)
-            if (callback) {
-                callback(data)
-            }
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-            if (callback) {
-                callback("error")
-            }
-        }
-    })
-}
-
-function addOrUpdateCompetitionToCloud(params, callback) {
-    if (params.objectId == "") {
-        addCompetitionToCloud(params, callback)
-    }
-    else {
-        updateCompetitionToCloud(params, callback)
-    }
 }

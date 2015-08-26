@@ -1,11 +1,6 @@
 var competition;
 var datetimepicker;
-
-const nonstartStr = "未开始";
-const doneStr = "已结束";
-
-const firstTerm = "上学期";
-const secondTerm = "下学期";
+var players
 
 
 $(document).ready(function() {
@@ -19,68 +14,54 @@ $(document).ready(function() {
         stepping:15,
     });
     
-    getCompetitionByObjectId(objectId, function(data) {
-        if (!data.competitionId) {
-            window.location = "competition.html";
+    getCompetitionByObjectId(objectId, function(data, error) {
+        if (!data) {
+            window.location = "/competition";
             return;
         }
         competition = data;
-        getAllPlayers(competition.competitionId, setupAtJs);
+        getAllPlayers(competition.get("competitionId"), setupAtJs);
     });
 
 });
 
 
-function setupAtJs(data) {
+function setupAtJs(data, error) {
 
-    var map = {};
-    for (var i = 0; i < data.players.length; i++) {
-        var player = data.players[i];
-        player.pinyin = codefans_net_CC2PY(player.name);
-        map[player.name] = player.pinyin;
+    if (error) {
+        return
     }
 
-    var players = [];
+    players = data
+    var map = {};
+    for (var i = 0; i < players.length; i++) {
+        var player = players[i];
+        map[player.get("name")] = codefans_net_CC2PY(player.get("name"));
+    }
+
+    var playersPinyin = [];
 
     $.each(map, function(key, val) {
         var object = {
             playerName: key,
             name: val,
         }
-        players.push(object);
+        playersPinyin.push(object);
     });
 
 
     $(".playerAtJs").atwho({
         at: "",
         tpl: '<li data-value="${playerName}">${playerName}</li>',
-        data: players,
+        data: playersPinyin,
         limit: 10,
     });
-}
-
-function findPlayerInArray(name, players) {
-    var player = null;
-    for (var i = 0; i < players.length; i++) {
-        player = players[i];
-        if (name == player.name) return player;
-    }
-
-
-    player = {
-        name: name,
-        goalCount: 0,
-        yellowCard: 0,
-        redCard: 0,
-    };
-    players.push(player);
-    return player;
 }
 
 //必须把相同球员的进球数等合并
 function matchDetailSubmit() {
     if ($("#matchSubmit").hasClass('disabled')) return;
-    var utcDate = new Date(datetimepicker.datetimepicker('getDate') - 8 * 60 * 60 * 1000);
+    var utcDate = new Date($('#datetimepicker').data("DateTimePicker").date() - 8 * 60 * 60 * 1000);
     var date = utcDate.pattern("yyyy-MM-dd hh:mm:ss");
     var hint = $('#matchHint').val();
     var matchProperty = $("#matchProperty").find("option:selected").attr("value");
@@ -113,7 +94,7 @@ function matchDetailSubmit() {
 
     var converDate = string2Date(date);
     var match = {};
-    match.competitionId = competition.competitionId;
+    match.competitionId = competition.get("competitionId");
     match.teamAName = teamAName;
     match.teamBName = teamBName;
     match.scoreA = scoreA;

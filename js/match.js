@@ -1,16 +1,10 @@
-var matchTable;
-var competition;
-
-const nonstartStr = "未开始";
-const doneStr = "已结束";
-
-const firstTerm = "上学期";
-const secondTerm = "下学期";
-
+var matchTable
+var competition
+var teams
 
 $(document).ready(function() {
 
-    var objectId = getUrlParam('objectId');
+    var objectId = getUrlParam('objectId')
     matchTable = $('#matchTable').dataTable({
         "sPaginationType": "bootstrap",
         "oLanguage": {
@@ -19,59 +13,66 @@ $(document).ready(function() {
             "sEmptyTable": "加载中。。。",
             "sInfoFiltered": "数据表中共为 _MAX_ 条记录",
             "sSearch": "搜索:",
-            "aoColumns": [{
-                sWidth: "50px"
-            }, {
-                sWidth: "100px"
-            }, {
-                sWidth: "100px"
-            }, {
-                sWidth: "100px"
-            }, {
-                sWidth: "50px"
-            }, {
-                sWidth: "50px"
-            }, {
-                sWidth: "50px"
-            }, {
-                sWidth: "50px"
-            }, {
-                sWidth: "100px"
-            }, {
-                sWidth: "300px"
-            }]
+            "bAutoWidth": false,
+            "aoColumns": [
+            { "sWidth": 'null' },
+            { "sWidth": 'null' },
+            { "sWidth": '10%' },
+            { "sWidth": '10%' },
+            { "sWidth": '10%' },
+            { "sWidth": '10%' },
+            { "sWidth": '10%' },
+            { "sWidth": '10%' },
+            { "sWidth": '10%' },
+            { "sWidth": '10%' }]
         },
         "bPaginate": false,
-    });
+    })
+    matchTable.fnDraw()
 
     getCompetitionByObjectId(objectId, function(data) {
-        if (!data.competitionId) {
-            window.location = "competition.html";
-            return;
+        if (!data) {
+            window.location = "/competition"
+            return
         }
-        competition = data;
-        getAllMatches(competition.competitionId, addMatchesToTable);
-    });
+        competition = data
 
-});
+        getAllTeams(competition.get("competitionId"), function(data, error) {
+            if (error) {
+                alert(error)
+                return
+            }
+            teams = data
+            getAllMatches(competition.get("competitionId"), addMatchesToTable)
 
-function addMatchesToTable(data) {
-    $.each(data.matches, function(index, val) {
-        var teamA = getTeamNameByTeamId(val.teamAId, data.teams);
-        var teamB = getTeamNameByTeamId(val.teamBId, data.teams);
-        var score = val.scoreA + ":" + val.scoreB;
-        var penalty = val.penaltyA + ":" + val.penaltyB;
+        })
+    })
+})
 
-        var hint = "无";
-        if (val.hint && val.hint != "") {
-            hint = val.hint;
+function addMatchesToTable(data, error) {
+
+    if (error) {
+        alert(error)
+        return 
+    }
+    matches = data
+
+    $.each(matches, function(index, val) {
+        var teamA = findTeamInArray(val.get("teamAId"), teams)
+        var teamB = findTeamInArray(val.get("teamBId"), teams)
+        var score = val.get("scoreA") + ":" + val.get("scoreB")
+        var penalty = val.get("penaltyA") + ":" + val.get("penaltyB")
+
+        var hint = "无"
+        if (val.get("hint") && val.get("hint") != "") {
+            hint = val.get("hint")
         }
-        var referee = "无";
-        if (val.referee && val.referee != "") {
-            referee = val.referee;
+        var referee = "无"
+        if (val.get("referee") && val.get("referee") != "") {
+            referee = val.get("referee")
         }
 
-        var date = new Date(Date.parse(val.date.iso.substring(0, 19)));
-        matchTable.fnAddData([competition.name, teamA.name, teamB.name, date.pattern("yyyy-MM-dd hh:mm:ss"), score, penalty, val.isStart, val.matchProperty, hint, referee]);
-    });
+        var date = val.get("date")
+        matchTable.fnAddData([competition.get("name"), teamA.get("name"), teamB.get("name"), date.pattern("yyyy-MM-dd hh:mm:ss"), score, penalty, val.get("isStart"), val.get("matchProperty"), hint, referee])
+    })
 }

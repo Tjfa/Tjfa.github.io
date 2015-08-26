@@ -1,12 +1,6 @@
 var teamTable;
 var competition;
-
-const nonstartStr = "未开始";
-const doneStr = "已结束";
-
-const firstTerm = "上学期";
-const secondTerm = "下学期";
-
+var source = null;
 
 $(document).ready(function() {  
   
@@ -25,12 +19,16 @@ $(document).ready(function() {
     });
 
     getCompetitionByObjectId(objectId, function(data) {
-        if (!data.competitionId) {
-            window.location = "competition.html";
+        if (!data) {
+            window.location = "/competition";
             return;
         }
         competition = data;
-        getAllTeams(competition.competitionId, addTeamsToTable);
+        getAllTeams(competition.get("competitionId"), addTeamsToTable);
+    });
+
+    $("#imgInp").change(function(){
+        readURL(this);
     });
 
 });
@@ -42,3 +40,36 @@ function addTeamsToTable(data) {
     });
 }
 
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#blah').attr('src', e.target.result);
+            console.log(e.target)
+            source = e
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function clearForum()
+{
+    source = null
+}
+
+function addTeamButtonClick() { 
+    $("#createTeamModal").modal('show');
+}
+
+function newTeamButtonClick() {
+    $('body').showLoading();
+    var code = source.target.result.substring(23)
+    uploadTeamBadge(code, null, "aa", 12083, 'image/png', function(data) {
+        if (data) {
+            console.log(data)
+        }
+        else {
+
+        }
+    })
+}
