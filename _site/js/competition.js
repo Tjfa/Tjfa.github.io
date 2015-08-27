@@ -162,6 +162,7 @@ function reloadData()   {
 }
 
 function addCompetitionOrUpdate() {
+
     if ($("#newCompetitionButton").hasClass('disabled')) return
 
     var objectId = $("#competetitionObjectId").val()
