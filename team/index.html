@@ -9,11 +9,12 @@
     <link rel="stylesheet" type="text/css" href="/css/bootstrap_adapt.css">
     <link rel="stylesheet" type="text/css" href="/css/showLoading.css">
     <script src="/js/jquery-1.10.2.min.js"></script>
-    <script src="/js/jquery.base64.min.js"></script>
+    <script src="/js/jquery-ui-1.11.4.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/jquery.dataTables.1.10.7.js"></script>
     <script src="/js/dataTables.bootstrap.js"></script>
     <script src="/js/base.js"></script>
+    <script src="/js/avos-0.4.1.min.js"></script>
     <script src="/js/avos.js"></script>
     <script src="/js/team.js"></script>
     <script src="/js/jquery.showLoading.min.js"></script>
@@ -93,40 +94,47 @@
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
+
+
+                        <div class="form-group">
+                        
+                            <label class="col-sm-2 control-label" style="margin-top:20px">队徽 </label>
+                        
+                            <div class="col-sm-5">
+                                <img id="teamBadgeImage" src="/images/team_placeholder.png" style="width: 70px; height: 70px"/>
+                                <br>
+                                <input type="file" class="filestyle" name="teamBadge" id="teamBadge"  accept="image/jpeg, image/png">
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label">球队名称</label>
                             <div class="col-sm-5">
-                                <input type="text" id="teamName" placeholder="球队名称" class="form-control">
+                                <input type="text" id="teamName" class="form-control">
                             </div>
                         </div>
+                        <br>
 
                         <div class="form-group">
-                            <div class="col-sm-2" style="text-align:center">
-                                <img id="blah" src="http://img02.taobaocdn.com/imgextra/i2/813079698/TB2GiDkbXXXXXXyXpXXXXXXXXXX_!!813079698.png" style="width:50px; height:50px">
-                            </div>
-                            <div class="col-sm-2">
-                                <span class="btn btn-default btn-file">
-                                    <input type="file" name="teamName" id="imgInp" accept="image/png, image/jpeg">选择文件
-                                </span>    
-                            </div>          
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">小组选择</label>
+                            <label class="col-sm-2 control-label">小组</label>
                             <div class="col-sm-5">
-                                  <select class="form-control" id="competitionTimeTerm">
-                                    <option value="0">无</option>
-                                    <option value="1">A</option>
-                                    <option value="2">B</option>
-                                    <option value="3">C</option>
-                                    <option value="4">D</option>
-                                    <option value="5">E</option>
-                                    <option value="6">F</option>
-                                    <option value="7">G</option>
-                                    <option value="8">H</option>
+                                <select class="form-control" id="teamGroup">
+                                    <option>无</option>
+                                    <option>A</option>
+                                    <option>B</option>
+                                    <option>C</option>
+                                    <option>D</option>
+                                    <option>E</option>
+                                    <option>F</option>
+                                    <option>G</option>
+                                    <option>H</option>
+                                    <option>I</option>
+                                    <option>J</option>
+                                    <option>K</option>
                                 </select>
                             </div>
                         </div>
+            
                     </form>
                 </div>
                 <div class="modal-footer">

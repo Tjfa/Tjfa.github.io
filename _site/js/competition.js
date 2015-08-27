@@ -217,7 +217,7 @@ function addCompetitionOrUpdate() {
         error: function(error) {
             $("#newCompetitionButton").removeClass('disabled')
             $("#newCompetitionButton").html(title)
-            alert(title + "失败，请稍后再试")
+            alert(title + "失败，请稍后再试!" + error)
         }
     })
 }
